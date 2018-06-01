@@ -1,3 +1,14 @@
+function getPersonIdFromURL() {
+  var path = window.location.pathname;
+  var pathParts = path.split('/');
+  // console.log("== pathParts:", pathParts);
+  if (pathParts[1] === "people") {
+    return pathParts[2];
+  } else {
+    return null;
+  }
+}
+
 function handleModalAcceptClick() {
 
   var photoURL = document.getElementById('photo-url-input').value.trim();
@@ -7,13 +18,18 @@ function handleModalAcceptClick() {
     alert("You must fill in all of the fields!");
   } else {
 
-    var photoCardTemplate = Handlebars.templates.photoCard;
-    var newPhotoCardHTML = photoCardTemplate({
-      photoURL: photoURL,
-      caption: caption
-    });
-    var photoCardContainer = document.querySelector('.photo-card-container');
-    photoCardContainer.insertAdjacentHTML('beforeend', newPhotoCardHTML);
+    var request = new XMLHttpRequest();
+    var personID = getPersonIdFromURL();
+    var url = "/people/" + personID + "/addPhoto";
+    request.open("POST", url);
+
+    // var photoCardTemplate = Handlebars.templates.photoCard;
+    // var newPhotoCardHTML = photoCardTemplate({
+    //   photoURL: photoURL,
+    //   caption: caption
+    // });
+    // var photoCardContainer = document.querySelector('.photo-card-container');
+    // photoCardContainer.insertAdjacentHTML('beforeend', newPhotoCardHTML);
 
     hideModal();
 
