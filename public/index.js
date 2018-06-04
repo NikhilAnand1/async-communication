@@ -23,13 +23,27 @@ function handleModalAcceptClick() {
     var url = "/people/" + personID + "/addPhoto";
     request.open("POST", url);
 
-    // var photoCardTemplate = Handlebars.templates.photoCard;
-    // var newPhotoCardHTML = photoCardTemplate({
-    //   photoURL: photoURL,
-    //   caption: caption
-    // });
-    // var photoCardContainer = document.querySelector('.photo-card-container');
-    // photoCardContainer.insertAdjacentHTML('beforeend', newPhotoCardHTML);
+    var requestBody = JSON.stringify({
+      photoURL: photoURL,
+      caption: caption
+    });
+
+    request.addEventListener('load', function (event) {
+      if (event.target.status === 200) {
+        var photoCardTemplate = Handlebars.templates.photoCard;
+        var newPhotoCardHTML = photoCardTemplate({
+          photoURL: photoURL,
+          caption: caption
+        });
+        var photoCardContainer = document.querySelector('.photo-card-container');
+        photoCardContainer.insertAdjacentHTML('beforeend', newPhotoCardHTML);
+      } else {
+        alert("Error storing photo: " + event.target.response);
+      }
+    });
+
+    request.setRequestHeader('Content-Type', 'application/json');
+    request.send(requestBody);
 
     hideModal();
 
